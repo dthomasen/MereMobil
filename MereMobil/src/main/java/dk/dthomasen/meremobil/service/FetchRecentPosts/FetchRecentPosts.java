@@ -27,15 +27,13 @@ public class FetchRecentPosts extends AsyncTask<Integer, Void, List<Page>> {
     @Override
     protected List<Page> doInBackground(Integer... params) {
         try {
-            System.setProperty("org.xml.sax.driver","org.xmlpull.v1.sax2.Driver");
+            System.setProperty("org.xml.sax.driver", "org.xmlpull.v1.sax2.Driver");
             String username = caller.getResources().getString(R.string.username);
             String password = caller.getResources().getString(R.string.password);
             String xmlRpcUrl = caller.getResources().getString(R.string.xmlrpcurl);
             Wordpress wp = new Wordpress(username, password, xmlRpcUrl);
             List<Page> recentPosts = wp.getRecentPosts(params[0]);
-            for(Page page : recentPosts){
-                Log.i("Background", page.getTitle());
-            }
+
             return recentPosts;
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,9 +43,6 @@ public class FetchRecentPosts extends AsyncTask<Integer, Void, List<Page>> {
 
     @Override
     protected void onPostExecute(List<Page> pages) {
-        for(Page page : pages){
-            Log.i("Background", page.getTitle());
-        }
         super.onPostExecute(pages);
         delegate.processFinish(pages);
     }
