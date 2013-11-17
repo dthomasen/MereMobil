@@ -24,7 +24,7 @@ import dk.dthomasen.meremobil.interfaces.AsyncResponse;
 import dk.dthomasen.meremobil.service.FetchRecentPosts.FetchRecentPosts;
 
 public class NyhederFragment extends Fragment implements AsyncResponse{
-    FetchRecentPosts recentPostsTask = new FetchRecentPosts(getActivity());
+    FetchRecentPosts recentPostsTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +37,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recentPostsTask = new FetchRecentPosts(getActivity());
         recentPostsTask.delegate = this;
         recentPostsTask.execute(10);
     }
