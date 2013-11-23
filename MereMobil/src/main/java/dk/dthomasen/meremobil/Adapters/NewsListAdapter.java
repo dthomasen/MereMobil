@@ -38,6 +38,17 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
     }
 
     @Override
+    public void add(Page object) {
+        super.add(object);
+        Collections.sort(this.items, new Comparator<Page>() {
+                    public int compare(Page obj1, Page obj2) {
+                        return obj2.getDateCreated().compareTo(obj1.getDateCreated());
+                    }
+                });
+        super.notifyDataSetChanged();
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;

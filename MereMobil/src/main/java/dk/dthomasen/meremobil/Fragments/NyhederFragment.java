@@ -73,6 +73,11 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
             customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
             newsList.setAdapter(customAdapter);
             customAdapter.setNotifyOnChange(true);
+            for (Page page : output){
+                if(!containsPage(page)){
+                    customAdapter.add(page);
+                }
+            }
         }else{
             for (Page page : output){
                 if(!containsPage(page)){
