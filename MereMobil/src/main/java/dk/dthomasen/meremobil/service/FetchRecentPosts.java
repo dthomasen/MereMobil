@@ -35,14 +35,8 @@ public class FetchRecentPosts extends AsyncTask<Integer, Void, List<Page>> {
             Wordpress wp = new Wordpress(username, password, xmlRpcUrl);
             List<Page> recentPosts = wp.getRecentPosts(params[0]);
             Log.i("Fetch","Recentposts: "+recentPosts.size());
-            List<Page> returnList = new ArrayList<Page>();
 
-            for (int i = params[1]; i < recentPosts.size(); i++){ //@TODO REFACTOR
-               returnList.add(recentPosts.get(i));
-               Log.i("Fetch", "Adding element");
-            }
-            Log.i("Fetch", "Returning: "+returnList.size());
-            return returnList;
+            return recentPosts;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

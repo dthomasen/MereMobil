@@ -39,7 +39,6 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
     private NewsListAdapter customAdapter;
     private boolean loading;
     private int previousTotal;
-    private boolean bottom = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,12 +68,13 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
             customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
             newsList.setAdapter(customAdapter);
         }else{
-            customAdapter.addAll(output);
-            customAdapter.notifyDataSetChanged();
-        }
-
-        if(output.size() == 0){
-            bottom = true;
+            for (Page page : output){
+                Log.i("Main", "Contains: "+containsPage(page));
+                if(!containsPage(page)){
+                    customAdapter.add(page);
+                    customAdapter.notifyDataSetChanged();
+                }
+            }
         }
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -82,6 +82,15 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         editor.apply();
         loading = false;
         progress.dismiss();
+    }
+
+    public boolean containsPage(Page page){
+        for(Page existing : recentPosts){
+            if(page.getLink().equals(existing.getLink())){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -111,8 +120,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 previousTotal = totalItemCount;
             }
         }
-        if (!bottom && !loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
-            Log.i("MaiN", "Totalitemcount= "+totalItemCount);
+        if (!loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
             if(totalItemCount == 0){
                 if(recentPosts.size() == 0){
                     loading = true;

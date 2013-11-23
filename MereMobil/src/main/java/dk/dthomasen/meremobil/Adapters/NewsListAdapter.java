@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import net.bican.wordpress.Page;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import dk.dthomasen.meremobil.R;
@@ -26,6 +28,12 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
         super(context, resource, items);
 
         this.items = items;
+
+        Collections.sort(this.items, new Comparator<Page>() {
+            public int compare(Page obj1, Page obj2) {
+                return obj1.getDateCreated().compareTo(obj2.getDateCreated());
+            }
+        });
 
     }
 
