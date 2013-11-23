@@ -48,19 +48,14 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
         if (p != null) {
 
             TextView tt = (TextView) v.findViewById(R.id.id);
-            TextView tt1 = (TextView) v.findViewById(R.id.categoryId);
             TextView tt3 = (TextView) v.findViewById(R.id.description);
 
             if (tt != null) {
                 tt.setText(p.getTitle());
             }
-            if (tt1 != null) {
-
-                tt1.setText("");
-            }
             if (tt3 != null) {
 
-                tt3.setText(p.getDescription());
+                tt3.setText(p.getDescription().replaceAll("\\<.*?\\>", ""));
             }
         }
 

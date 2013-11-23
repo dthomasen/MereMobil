@@ -1,4 +1,4 @@
-package dk.dthomasen.meremobil.service.FetchRecentPosts;
+package dk.dthomasen.meremobil.service;
 
 import android.app.Activity;
 import android.os.AsyncTask;

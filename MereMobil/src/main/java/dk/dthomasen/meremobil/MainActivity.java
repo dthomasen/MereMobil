@@ -6,15 +6,9 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-
-import net.bican.wordpress.Page;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import dk.dthomasen.meremobil.Fragments.AnmeldelserFragment;
 import dk.dthomasen.meremobil.Fragments.BlogFragment;
@@ -24,7 +18,6 @@ import dk.dthomasen.meremobil.Fragments.OmOsFragment;
 import dk.dthomasen.meremobil.Fragments.PodcastFragment;
 import dk.dthomasen.meremobil.Fragments.TipsFragment;
 import dk.dthomasen.meremobil.Fragments.WebTVFragment;
-import dk.dthomasen.meremobil.service.FetchRecentPosts.FetchRecentPosts;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

@@ -1,14 +1,12 @@
 package dk.dthomasen.meremobil.Fragments;
 
 import android.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import net.bican.wordpress.Page;
 
@@ -17,6 +15,7 @@ import dk.dthomasen.meremobil.R;
 public class ArticleFragment extends Fragment{
 
     Page page;
+    WebView articleText;
 
     public ArticleFragment(Page page) {
         this.page = page;
@@ -27,11 +26,24 @@ public class ArticleFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.article_view,
                 container, false);
-        TextView titleText = (TextView) view.findViewById(R.id.articleTitle);
-        titleText.setText(page.getTitle());
-        TextView articleText = (TextView) view.findViewById(R.id.articleText);
-        Log.i("ArticleFragment", page.getMt_text_more());
-        articleText.setText(Html.fromHtml(page.getMt_text_more()));
+        articleText = (WebView) view.findViewById(R.id.articleText);
+        articleText.getSettings().setJavaScriptEnabled(true);
+        articleText.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+                articleText.loadUrl("javascript:(function() { " +
+                        "document.getElementById('header').style.display = 'none'; " +
+                        "})()");
+                articleText.loadUrl("javascript:(function() { " +
+                        "document.getElementById('cookie-law-info-again').style.display = 'none'; " +
+                        "})()");
+                articleText.loadUrl("javascript:(function() { " +
+                        "document.getElementById('switch').style.display = 'none'; " +
+                        "})()");
+            }
+        });
+        articleText.loadUrl(page.getLink());
         return view;
     }
 

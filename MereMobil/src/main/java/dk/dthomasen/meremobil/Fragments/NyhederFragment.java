@@ -17,7 +17,7 @@ import java.util.List;
 import dk.dthomasen.meremobil.Adapters.NewsListAdapter;
 import dk.dthomasen.meremobil.R;
 import dk.dthomasen.meremobil.interfaces.AsyncResponse;
-import dk.dthomasen.meremobil.service.FetchRecentPosts.FetchRecentPosts;
+import dk.dthomasen.meremobil.service.FetchRecentPosts;
 
 public class NyhederFragment extends Fragment implements AsyncResponse, AdapterView.OnItemClickListener {
     FetchRecentPosts recentPostsTask;
@@ -50,7 +50,6 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i("Main", recentPosts.get(position).getTitle());
         Fragment fragment = new ArticleFragment(recentPosts.get(position));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()

@@ -14,29 +14,18 @@
             android:text="id" android:textStyle="bold"
             android:gravity="left"
             android:layout_weight="1"
-            android:typeface="monospace"
-            android:height="40sp" />
+            />
     </TableRow>
 
     <TableRow android:layout_height="wrap_content"
         android:layout_width="fill_parent">
-
-        <TextView android:textColor="#000000"
-            android:id="@+id/categoryId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="categoryId"
-            android:layout_weight="1"
-            android:height="20sp" />
-
         <TextView android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:layout_weight="1"
             android:textColor="#000000"
-            android:gravity="right"
             android:id="@+id/description"
             android:text="description"
-            android:height="20sp" />
+         />
     </TableRow>
 
 </TableLayout>
