@@ -35,5 +35,5 @@ android {
 
 dependencies {
 	compile 'com.android.support:support-v4:+'
-    compile files('libs/jwordpress-0.5.1.jar','libs/xmlrpc-1.1.1.jar')
+    compile files('libs/jwordpress-0.5.1.jar','libs/xmlrpc-1.1.1.jar','libs/gson-2.2.4.jar')
 }
