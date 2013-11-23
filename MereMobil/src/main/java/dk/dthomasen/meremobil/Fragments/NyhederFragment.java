@@ -39,6 +39,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
     private NewsListAdapter customAdapter;
     private boolean loading;
     private int previousTotal;
+    private boolean bottom = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,10 +80,16 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 }
             }
         }else{
-            for (Page page : output){
-                if(!containsPage(page)){
-                    customAdapter.add(page);
+            if(previousTotal == output.size()){
+               bottom = true;
+            }else{
+                for (Page page : output){
+                    if(!containsPage(page)){
+                        customAdapter.add(page);
+                    }
                 }
+                bottom = false;
+                previousTotal = output.size();
             }
         }
 
@@ -125,12 +132,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
     }
 
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (loading) {
-            if (totalItemCount > previousTotal) {
-                previousTotal = totalItemCount;
-            }
-        }
-        if (!loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+        if (!bottom && !loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
             if(totalItemCount == 0){
                 if(recentPosts.size() == 0){
                     loading = true;
