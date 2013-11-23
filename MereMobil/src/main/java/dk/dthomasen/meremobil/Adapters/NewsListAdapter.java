@@ -31,7 +31,7 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
 
         Collections.sort(this.items, new Comparator<Page>() {
             public int compare(Page obj1, Page obj2) {
-                return obj1.getDateCreated().compareTo(obj2.getDateCreated());
+                return obj2.getDateCreated().compareTo(obj1.getDateCreated());
             }
         });
 

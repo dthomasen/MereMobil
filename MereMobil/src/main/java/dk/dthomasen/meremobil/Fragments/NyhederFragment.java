@@ -59,6 +59,11 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         if(recentPosts == null){
             recentPosts = new ArrayList<Page>();
         }
+        loading = true;
+        progress = ProgressDialog.show(getActivity(), "Henter nye artikler", "Vent venligst...");
+        recentPostsTask = new FetchRecentPosts(getActivity());
+        recentPostsTask.delegate = this;
+        recentPostsTask.execute(30);
     }
 
     @Override
@@ -67,12 +72,11 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         if(customAdapter == null){
             customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
             newsList.setAdapter(customAdapter);
+            customAdapter.setNotifyOnChange(true);
         }else{
             for (Page page : output){
-                Log.i("Main", "Contains: "+containsPage(page));
                 if(!containsPage(page)){
                     customAdapter.add(page);
-                    customAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -110,6 +114,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
             ListView newsList = (ListView) getActivity().findViewById(R.id.NyhederList);
             NewsListAdapter customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
             newsList.setAdapter(customAdapter);
+            customAdapter.setNotifyOnChange(true);
             newsList.setOnItemClickListener(this);
         }
     }
@@ -127,14 +132,14 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                     progress = ProgressDialog.show(getActivity(), "Henter artikeloversigt", "Vent venligst...");
                     recentPostsTask = new FetchRecentPosts(getActivity());
                     recentPostsTask.delegate = this;
-                    recentPostsTask.execute(15,0);
+                    recentPostsTask.execute(15);
                 }
             }else{
                 loading = true;
                 progress = ProgressDialog.show(getActivity(), "Henter flere artikler", "Vent venligst...");
                 recentPostsTask = new FetchRecentPosts(getActivity());
                 recentPostsTask.delegate = this;
-                recentPostsTask.execute(totalItemCount+5,recentPosts.size());
+                recentPostsTask.execute(totalItemCount+5);
             }
          }
     }
