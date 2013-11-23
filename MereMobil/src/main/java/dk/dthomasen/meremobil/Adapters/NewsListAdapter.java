@@ -17,7 +17,6 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
 
     public NewsListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
-        // TODO Auto-generated constructor stub
     }
 
     private List<Page> items;
@@ -47,15 +46,15 @@ public class NewsListAdapter extends ArrayAdapter<Page> {
 
         if (p != null) {
 
-            TextView tt = (TextView) v.findViewById(R.id.id);
-            TextView tt3 = (TextView) v.findViewById(R.id.description);
+            TextView title = (TextView) v.findViewById(R.id.title);
+            TextView description = (TextView) v.findViewById(R.id.description);
 
-            if (tt != null) {
-                tt.setText(p.getTitle());
+            if (title != null) {
+                title.setText(p.getTitle());
             }
-            if (tt3 != null) {
+            if (description != null) {
 
-                tt3.setText(p.getDescription().replaceAll("\\<.*?\\>", ""));
+                description.setText(p.getDescription().replaceAll("\\<.*?\\>", ""));
             }
         }
 

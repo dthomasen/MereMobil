@@ -53,7 +53,8 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         Fragment fragment = new ArticleFragment(recentPosts.get(position));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
+                .add(R.id.container, fragment)
+                .addToBackStack("NyhederFragment")
                 .commit();
     }
 }
