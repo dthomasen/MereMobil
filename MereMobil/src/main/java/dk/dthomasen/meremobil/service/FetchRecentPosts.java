@@ -7,6 +7,7 @@ import android.util.Log;
 import net.bican.wordpress.Page;
 import net.bican.wordpress.Wordpress;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dk.dthomasen.meremobil.R;
@@ -33,8 +34,15 @@ public class FetchRecentPosts extends AsyncTask<Integer, Void, List<Page>> {
             String xmlRpcUrl = caller.getResources().getString(R.string.xmlrpcurl);
             Wordpress wp = new Wordpress(username, password, xmlRpcUrl);
             List<Page> recentPosts = wp.getRecentPosts(params[0]);
+            Log.i("Fetch","Recentposts: "+recentPosts.size());
+            List<Page> returnList = new ArrayList<Page>();
 
-            return recentPosts;
+            for (int i = params[1]; i < recentPosts.size(); i++){ //@TODO REFACTOR
+               returnList.add(recentPosts.get(i));
+               Log.i("Fetch", "Adding element");
+            }
+            Log.i("Fetch", "Returning: "+returnList.size());
+            return returnList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

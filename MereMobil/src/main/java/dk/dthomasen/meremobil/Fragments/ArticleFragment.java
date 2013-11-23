@@ -51,6 +51,9 @@ public class ArticleFragment extends Fragment{
                 articleText.loadUrl("javascript:(function() { " +
                         "document.getElementById('switch').style.display = 'none'; " +
                         "})()");
+                articleText.loadUrl("javascript:(function() { " +
+                        "document.getElementById('cookie-law-info-bar').style.display = 'none'; " +
+                        "})()");
             }
         });
         articleText.loadUrl(page.getLink());
