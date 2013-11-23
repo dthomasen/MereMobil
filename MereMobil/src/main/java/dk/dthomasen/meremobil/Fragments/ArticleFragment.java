@@ -1,10 +1,13 @@
 package dk.dthomasen.meremobil.Fragments;
 
+import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -16,6 +19,7 @@ public class ArticleFragment extends Fragment{
 
     Page page;
     WebView articleText;
+    Dialog progress;
 
     public ArticleFragment(Page page) {
         this.page = page;
@@ -29,6 +33,12 @@ public class ArticleFragment extends Fragment{
         articleText = (WebView) view.findViewById(R.id.articleText);
         articleText.getSettings().setJavaScriptEnabled(true);
         articleText.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progress.dismiss();
+            }
+
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
@@ -50,5 +60,6 @@ public class ArticleFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        progress = ProgressDialog.show(getActivity(), "Henter artiklen", "Vent venligst...");
     }
 }

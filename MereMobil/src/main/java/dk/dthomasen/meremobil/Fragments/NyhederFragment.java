@@ -1,7 +1,9 @@
 package dk.dthomasen.meremobil.Fragments;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import dk.dthomasen.meremobil.service.FetchRecentPosts;
 public class NyhederFragment extends Fragment implements AsyncResponse, AdapterView.OnItemClickListener {
     FetchRecentPosts recentPostsTask;
     List<Page> recentPosts;
+    Dialog progress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +36,9 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i("MainActivity", "onCreate called");
         super.onCreate(savedInstanceState);
+        progress = ProgressDialog.show(getActivity(), "Henter artikeloversigt", "Vent venligst...");
         recentPostsTask = new FetchRecentPosts(getActivity());
         recentPostsTask.delegate = this;
         recentPostsTask.execute(20);
@@ -45,6 +50,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         ListView newsList = (ListView) getActivity().findViewById(R.id.NyhederList);
         NewsListAdapter customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, output);
         newsList.setAdapter(customAdapter);
+        progress.dismiss();
         newsList.setOnItemClickListener(this);
     }
 
@@ -53,8 +59,20 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         Fragment fragment = new ArticleFragment(recentPosts.get(position));
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.container, fragment)
+                .replace(R.id.container, fragment)
                 .addToBackStack("NyhederFragment")
                 .commit();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i("Main", "Onresume called");
+        super.onResume();
+        if(recentPosts != null){
+            ListView newsList = (ListView) getActivity().findViewById(R.id.NyhederList);
+            NewsListAdapter customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
+            newsList.setAdapter(customAdapter);
+            newsList.setOnItemClickListener(this);
+        }
     }
 }
