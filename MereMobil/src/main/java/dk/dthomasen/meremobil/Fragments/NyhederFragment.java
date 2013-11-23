@@ -72,7 +72,6 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
             customAdapter.notifyDataSetChanged();
         }
         SharedPreferences.Editor editor = prefs.edit();
-        recentPosts.addAll(output);
         editor.putString("recentNews", new Gson().toJson(recentPosts));
         editor.apply();
         loading = false;
@@ -121,7 +120,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 progress = ProgressDialog.show(getActivity(), "Henter artikeloversigt", "Vent venligst..."+totalItemCount);
                 recentPostsTask = new FetchRecentPosts(getActivity());
                 recentPostsTask.delegate = this;
-                recentPostsTask.execute(totalItemCount+4,recentPosts.size()+1);
+                recentPostsTask.execute(totalItemCount+5,recentPosts.size());
             }
          }
     }
