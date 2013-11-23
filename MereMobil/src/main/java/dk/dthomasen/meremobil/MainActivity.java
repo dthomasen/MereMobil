@@ -80,7 +80,6 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
-                .addToBackStack("MainActivity")
                 .commit();
     }
 

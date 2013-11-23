@@ -39,6 +39,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
     private NewsListAdapter customAdapter;
     private boolean loading;
     private int previousTotal;
+    private boolean bottom = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +72,11 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
             customAdapter.addAll(output);
             customAdapter.notifyDataSetChanged();
         }
+
+        if(output.size() == 0){
+            bottom = true;
+        }
+
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("recentNews", new Gson().toJson(recentPosts));
         editor.apply();
@@ -105,7 +111,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 previousTotal = totalItemCount;
             }
         }
-        if (!loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+        if (!bottom && !loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
             Log.i("MaiN", "Totalitemcount= "+totalItemCount);
             if(totalItemCount == 0){
                 if(recentPosts.size() == 0){
@@ -117,7 +123,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 }
             }else{
                 loading = true;
-                progress = ProgressDialog.show(getActivity(), "Henter artikeloversigt", "Vent venligst..."+totalItemCount);
+                progress = ProgressDialog.show(getActivity(), "Henter flere artikler", "Vent venligst...");
                 recentPostsTask = new FetchRecentPosts(getActivity());
                 recentPostsTask.delegate = this;
                 recentPostsTask.execute(totalItemCount+5,recentPosts.size());
