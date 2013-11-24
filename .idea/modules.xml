@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MereMobil/MereMobil.iml" filepath="$PROJECT_DIR$/MereMobil/MereMobil.iml" />
       <module fileurl="file://$PROJECT_DIR$/MereMobil.dk.iml" filepath="$PROJECT_DIR$/MereMobil.dk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" filepath="$PROJECT_DIR$/PullToRefresh/PullToRefresh.iml" />
     </modules>
   </component>
 </project>

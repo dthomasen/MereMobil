@@ -30,15 +30,20 @@ import dk.dthomasen.meremobil.R;
 import dk.dthomasen.meremobil.interfaces.AsyncResponse;
 import dk.dthomasen.meremobil.service.FetchRecentPosts;
 
-public class NyhederFragment extends Fragment implements AsyncResponse, AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
+public class NyhederFragment extends Fragment implements AsyncResponse, AdapterView.OnItemClickListener, AbsListView.OnScrollListener{
     FetchRecentPosts recentPostsTask;
     List<Page> recentPosts = new ArrayList<Page>();
     Dialog progress;
     SharedPreferences prefs;
     Type pageListType = new TypeToken<List<Page>>(){}.getType();
+    private ListView newsList;
     private NewsListAdapter customAdapter;
-    private boolean loading;
-    private int previousTotal;
+    private boolean mIsLoading = false;
+    private boolean mMoreDataAvailable = true;
+    private boolean mWasLoading = false;
+    private final int AUTOLOAD_THRESHOLD = 4;
+    private int previousTotal = 0;
+    private View mFooterView;
     private boolean bottom = false;
 
     @Override
@@ -46,7 +51,7 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nyheder,
                 container, false);
-        ListView newsList = (ListView) view.findViewById(R.id.NyhederList);
+        newsList = (ListView) view.findViewById(R.id.NyhederList);
         newsList.setOnItemClickListener(this);
         newsList.setOnScrollListener(this);
         return view;
@@ -60,16 +65,18 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         if(recentPosts == null){
             recentPosts = new ArrayList<Page>();
         }
-        loading = true;
-        progress = ProgressDialog.show(getActivity(), "Henter nye artikler", "Vent venligst...");
-        recentPostsTask = new FetchRecentPosts(getActivity());
-        recentPostsTask.delegate = this;
-        recentPostsTask.execute(30);
+        mFooterView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_view, null);
+        //progress = ProgressDialog.show(getActivity(), "Henter nye artikler", "Vent venligst...");
+        //recentPostsTask = new FetchRecentPosts(getActivity());
+        //recentPostsTask.delegate = this;
+        //recentPostsTask.execute(30);
     }
 
     @Override
     public void processFinish(List<Page> output) {
-        ListView newsList = (ListView) getActivity().findViewById(R.id.NyhederList);
+        if(previousTotal == output.size()){
+            bottom = true;
+        }
         if(customAdapter == null){
             customAdapter = new NewsListAdapter(getActivity(), R.layout.news_list, recentPosts);
             newsList.setAdapter(customAdapter);
@@ -80,24 +87,19 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
                 }
             }
         }else{
-            if(previousTotal == output.size()){
-               bottom = true;
-            }else{
-                for (Page page : output){
-                    if(!containsPage(page)){
-                        customAdapter.add(page);
-                    }
+            for (Page page : output){
+                if(!containsPage(page)){
+                    customAdapter.add(page);
                 }
-                bottom = false;
-                previousTotal = output.size();
             }
         }
-
+        previousTotal = output.size();
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("recentNews", new Gson().toJson(recentPosts));
         editor.apply();
-        loading = false;
         progress.dismiss();
+        mIsLoading = false;
+        newsList.removeFooterView(mFooterView);
     }
 
     public boolean containsPage(Page page){
@@ -131,27 +133,29 @@ public class NyhederFragment extends Fragment implements AsyncResponse, AdapterV
         }
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (!bottom && !loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
-            if(totalItemCount == 0){
-                if(recentPosts.size() == 0){
-                    loading = true;
-                    progress = ProgressDialog.show(getActivity(), "Henter artikeloversigt", "Vent venligst...");
-                    recentPostsTask = new FetchRecentPosts(getActivity());
-                    recentPostsTask.delegate = this;
-                    recentPostsTask.execute(15);
-                }
-            }else{
-                loading = true;
-                progress = ProgressDialog.show(getActivity(), "Henter flere artikler", "Vent venligst...");
+       if(previousTotal == 0 && !mIsLoading){
+           mIsLoading = true;
+           progress = ProgressDialog.show(getActivity(), "Henter nye artikler", "Vent venligst...");
+           recentPostsTask = new FetchRecentPosts(getActivity());
+           recentPostsTask.delegate = this;
+           recentPostsTask.execute(12);
+       }else if (!mIsLoading && mMoreDataAvailable) {
+            if (bottom) {
+                newsList.removeFooterView(mFooterView);
+            } else if (totalItemCount - AUTOLOAD_THRESHOLD <= firstVisibleItem + visibleItemCount) {
+                mIsLoading = true;
+                newsList.addFooterView(mFooterView, null, false);
                 recentPostsTask = new FetchRecentPosts(getActivity());
                 recentPostsTask.delegate = this;
                 recentPostsTask.execute(totalItemCount+5);
             }
-         }
+        }
     }
-
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
-
 }
